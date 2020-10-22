@@ -39,7 +39,7 @@ git clone (githuburl)
 
 cd Backend
 
-make build-lotus
+make
 
 go build
 ```

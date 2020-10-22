@@ -2,9 +2,10 @@ package models
 
 import (
 	"fmt"
-	"github.com/astaxie/beego/config"
 	"log"
 	"time"
+
+	"github.com/astaxie/beego/config"
 
 	"github.com/globalsign/mgo"
 )
@@ -28,11 +29,12 @@ func TimenowInit() {
 }
 
 func Db_init(config config.Configer) {
-	host := config.String("mongoHost")
-	user := config.String("mongoUser")
-	pass := config.String("mongoPass")
+	// host := config.String("mongoHost")
+	// user := config.String("mongoUser")
+	// pass := config.String("mongoPass")
 	mongoDB := config.String("mongoDB")
-	mgosession := GetGlobalSession(host, user, pass, mongoDB)
+	url := config.String("mongoUrl")
+	mgosession := GetGlobalSession(url)
 	_, err := mgosession.DatabaseNames()
 	if err != nil {
 		panic(ps("mongoInit fail:%v", err))
@@ -51,13 +53,14 @@ func Db_init(config config.Configer) {
 	Create_miner_index()
 }
 
-func GetGlobalSession(host, user, pass, mongoDB string) *mgo.Session {
-	dialInfo := &mgo.DialInfo{
-		Addrs:    []string{host},
-		Username: user,
-		Password: pass,
-		Database: mongoDB,
-	}
+func GetGlobalSession(url string) *mgo.Session {
+	// dialInfo := &mgo.DialInfo{
+	// 	Addrs:    []string{host},
+	// 	Username: user,
+	// 	Password: pass,
+	// 	Database: mongoDB,
+	// }
+	dialInfo, err := mgo.ParseURL(url)
 	s, err := mgo.DialWithInfo(dialInfo)
 	if err != nil {
 		log.Fatalln("create mongodb session error ", err)
